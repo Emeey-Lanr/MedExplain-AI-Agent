@@ -21,5 +21,17 @@ type JSONRPC_REQUEST struct {
   Id string `json:"id"`
   Method string `json:"method"`
   Params MessageObj `json:"params"`
+}
 
+
+type JSONRPC_SUCCESS_RESPONSE struct {
+  Jsonrpc string `json:"jsonrpc"`
+  Id string `json:"id"`
+  Method string `json:"method"`
+  Params MessageObj `json:"params"`
+}
+
+type JSONRPC_ERROR_RESPONSE struct {
+  Jsonrpc string `json:"jsonrpc"`
+   
 }
