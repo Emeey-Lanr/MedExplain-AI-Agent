@@ -3,44 +3,54 @@ package llm
 import (
 	"ai-agent/models"
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
 )
 
 
-func GeminiAIRequest(content  models.RequestObject) {
+func GeminiAIRequest(contentData []models.ContentData) models.GeminiReponseObject{
 	
-    api_key := os.Getenv("GOOGLE_AI_API_KEY") //google gemini api key from dotenv
+   for _, value := range contentData{
+      if value.Role == "agent" {
+         value.Role = "model"
+      }
+
+   }
+
+   content := models.GeminiRequestObject{Contents: contentData}
+      
   
-	url := fmt.Sprintf("https://genrativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=%s", api_key)
+	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=%s", os.Getenv("GOOGLE_AI_API_KEY"))
 
-   reqBody, _:= json.Marshal(content) // encoding rquest into json 
-
+   reqBody, _:= json.Marshal(content) 
+	
+       fmt.Println(string(reqBody))
 
   req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(reqBody))
   if err != nil{
 	log.Fatal(err)
   }
 
-  req.Header.Set("contet-type", "application/json")
+  req.Header.Set("Content-Type", "application/json")
+
 
    client := &http.Client{}
    resp, err := client.Do(req) 
-
    if err != nil{
 	log.Fatal(err)
    }
 
    defer resp.Body.Close()
- 
-   respBody, _ := io.ReadAll(resp.Body)
 
-   fmt.Println(string(respBody))
+   
+  var responseData models.GeminiReponseObject
+   if err := json.NewDecoder(resp.Body).Decode(&responseData); err != nil{
+      log.Fatal(err.Error())
+   }
+
+  return responseData
   
-
 }
