@@ -5,10 +5,9 @@ import (
 	"ai-agent/llm"
 	"ai-agent/models"
 	"ai-agent/utils"
-	"fmt"
-
 	"encoding/json"
-
+	"fmt"
+	"ai-agent/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,10 +17,10 @@ import (
 
 
 func Inquire(c *gin.Context) {
-	history := map[string][]models.ContentData{}
-
+   
    var reqJsonRPC models.JSONRPC_REQUEST
- 
+  
+   
 
  if err := c.ShouldBindJSON(&reqJsonRPC); err != nil{
    utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:"", Error:utils.ErrorData{Code:-32700, Message: "Parse Error", Data: err.Error()}})
@@ -46,19 +45,24 @@ func Inquire(c *gin.Context) {
 
 
 
-// Create Context Id if it's begining of a new chat
+// Create Context Id if it's a begining of a new chat
 if reqJsonRPC.Params.ContextId == "" {
    reqJsonRPC.Params.ContextId = helpers.GenerateContextId()
 }
 
+
 // Add to the history body which will also serve as as a content for gemini
- history[reqJsonRPC.Params.ContextId]  = append(history[reqJsonRPC.Params.ContextId], helpers.AddToHistory("user", reqJsonRPC.Params.Message.Parts[0].Text)) 
- 
- geminiResponse :=  llm.GeminiAIRequest(history[reqJsonRPC.Params.ContextId])
+  config.History.AddHistory(reqJsonRPC.Params.ContextId, "user", reqJsonRPC.Params.Message.Parts[0].Text)
+
+//  Gemini Response
+ geminiResponse, err :=  llm.GeminiAIRequest(config.History.GetHistory(reqJsonRPC.Params.ContextId))
+ if err != nil{
+	fmt.Println(err)
+	return
+ }
 
 // add gemini reponse to memory db 
- history[reqJsonRPC.Params.ContextId] = append(history[reqJsonRPC.Params.ContextId], helpers.AddToHistory("agent", geminiResponse.Candidates[0].Contents.Parts[0].Text)) 
- 
+ config.History.AddHistory(reqJsonRPC.Params.ContextId, "agent", geminiResponse.Candidates[0].Contents.Parts[0].Text )
 
  fmt.Println(geminiResponse)
  

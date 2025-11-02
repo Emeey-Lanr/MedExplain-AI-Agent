@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ai-agent/config"
 	"ai-agent/routes"
 	"log"
 
@@ -13,6 +14,8 @@ import (
 func main ()  {
 
 	r := gin.Default()
+
+    config.Init()
 
 	if err := godotenv.Load(); err != nil{
 		log.Fatal("Error loading.env:", err) // change to println in production for your app not crash

@@ -6,7 +6,7 @@ type TextData struct {
     Text  string `json:"text"`
 }
 type ContentData struct {
-    Role  string `json:"role"`
+    Role  string `json:"role,omitempty"`
     Parts []TextData `json:"parts"`
 }
 
@@ -28,6 +28,13 @@ type GeminiReponseObject struct {
 
 
 
-type LLMSystemInstruction {
+// System Instruction And Rquest
 
+// type PartsForSystem struct {
+//     Parts []TextData `json:"parts"`
+// }
+
+type LLMSystemInstruction struct {
+     SystemInstructions ContentData `json:"system_instruction"`
+     Contents []ContentData `json:"contents"`
 }

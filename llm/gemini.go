@@ -5,13 +5,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 )
 
 
-func GeminiAIRequest(contentData []models.ContentData) models.GeminiReponseObject{
+func GeminiAIRequest(contentData []models.ContentData)( models.GeminiReponseObject, error){
 	
    for _, value := range contentData{
       if value.Role == "agent" {
@@ -21,17 +20,25 @@ func GeminiAIRequest(contentData []models.ContentData) models.GeminiReponseObjec
    }
 
    content := models.GeminiRequestObject{Contents: contentData}
+ 
+   instruction := "You're are MedExplain, an AI that only explains medical terms clearly and kindly. You can always show tips and what to do and what not to do in relation to the medical term if any. If a user asks about unrelated topics, politely refuse and remind them this chat is for medical explantion purpose"
+
+   systemInstructionAndContentData := models.LLMSystemInstruction{
+      SystemInstructions: models.ContentData{Parts: append([]models.TextData{}, models.TextData{Text: instruction})},
+      Contents: content.Contents,
+   }
       
   
 	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=%s", os.Getenv("GOOGLE_AI_API_KEY"))
 
-   reqBody, _:= json.Marshal(content) 
+   reqBody, _:= json.Marshal(systemInstructionAndContentData) 
 	
        fmt.Println(string(reqBody))
 
   req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(reqBody))
   if err != nil{
-	log.Fatal(err)
+   return models.GeminiReponseObject{}, fmt.Errorf("%s", err.Error())
+	
   }
 
   req.Header.Set("Content-Type", "application/json")
@@ -40,7 +47,7 @@ func GeminiAIRequest(contentData []models.ContentData) models.GeminiReponseObjec
    client := &http.Client{}
    resp, err := client.Do(req) 
    if err != nil{
-	log.Fatal(err)
+   return models.GeminiReponseObject{}, fmt.Errorf("%s", err.Error())
    }
 
    defer resp.Body.Close()
@@ -48,9 +55,9 @@ func GeminiAIRequest(contentData []models.ContentData) models.GeminiReponseObjec
    
   var responseData models.GeminiReponseObject
    if err := json.NewDecoder(resp.Body).Decode(&responseData); err != nil{
-      log.Fatal(err.Error())
+        return models.GeminiReponseObject{}, fmt.Errorf("%s", err.Error())
    }
 
-  return responseData
+  return responseData, nil
   
 }
