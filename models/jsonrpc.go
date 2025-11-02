@@ -10,6 +10,7 @@ type PartData struct {
 
 
 type MessageData struct {
+  Kind string `json:"kind,omitempty"`
   Role string `json:"Role"`
   Parts []PartData `json:"parts"`
   MessageId string `json:"messageId"`
@@ -39,11 +40,24 @@ type JSONRPC_REQUEST struct {
 
 // Success Response
 
+
+
+type StatusData struct {
+   State string `json:"state"`
+   TimeStamp string `json:"timestamp"`
+   Message MessageData `json:"message"`
+}
+
+type ResultData struct {
+  Id string `json:"id"`
+  ContextId string `json:"contextId"`
+  Status StatusData `json:"status"`
+}
+
 type JSONRPC_SUCCESS_RESPONSE struct {
   Jsonrpc string `json:"jsonrpc"`
   Id string `json:"id"`
-  Method string `json:"method"`
-  Params MessageObj `json:"params"`
+ Result ResultData `json:"result"`
 }
 
 

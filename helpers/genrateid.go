@@ -5,9 +5,9 @@ import (
 )
 
 
-func GenerateContextId() string{
+func GenerateContextId(sType string) string{
 	
-	ctxId := "ctx-" + uuid.NewString()
+	ctxId := sType + uuid.NewString()
 
 	return ctxId
 

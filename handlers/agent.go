@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"ai-agent/config"
 	"ai-agent/helpers"
 	"ai-agent/llm"
 	"ai-agent/models"
 	"ai-agent/utils"
 	"encoding/json"
 	"fmt"
-	"ai-agent/config"
-	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
+    "github.com/gin-gonic/gin"
+	
 )
 
 
@@ -47,7 +50,7 @@ func Inquire(c *gin.Context) {
 
 // Create Context Id if it's a begining of a new chat
 if reqJsonRPC.Params.ContextId == "" {
-   reqJsonRPC.Params.ContextId = helpers.GenerateContextId()
+   reqJsonRPC.Params.ContextId = helpers.GenerateContextId("ctx-")
 }
 
 
@@ -64,9 +67,30 @@ if reqJsonRPC.Params.ContextId == "" {
 // add gemini reponse to memory db 
  config.History.AddHistory(reqJsonRPC.Params.ContextId, "agent", geminiResponse.Candidates[0].Contents.Parts[0].Text )
 
- fmt.Println(geminiResponse)
+ messageParts :=  []map[string]interface{}{{"kind":"text", "text":geminiResponse.Candidates[0].Contents.Parts[0].Text}}
+
+ response := map[string]interface{}{
+	"jsonrpc":reqJsonRPC.Jsonrpc,
+	"id":reqJsonRPC.Id,
+	"result":map[string]interface{}{
+		"id":reqJsonRPC.Params.Message.TaskId,
+		"contextId":reqJsonRPC.Params.ContextId,
+		"status":map[string]interface{}{
+			"state":"input-required",
+			"timestamp":time.Now().UTC().Format(time.RFC3339),
+			"message":map[string]interface{}{
+                "messageId":helpers.GenerateContextId("msg-"),
+				"role":"agent",
+				"parts": messageParts,
+				"kind":"message",
+				"taskId":reqJsonRPC.Params.Message.TaskId,
+			},
+		},
+	},
+ }
  
 
- return
+ utils.Response(c, http.StatusOK, response)
+ 
 
 }
