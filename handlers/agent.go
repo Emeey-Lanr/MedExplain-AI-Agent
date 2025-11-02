@@ -52,7 +52,7 @@ if reqJsonRPC.Params.ContextId == "" {
 //  Gemini Response
  geminiResponse, err :=  llm.GeminiAIRequest(config.History.GetHistory(reqJsonRPC.Params.ContextId))
  if err != nil{
-   utils.Response(c, http.StatusInternalServerError,utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32600, Message: "Invalid Server Error", Data: err.Error()}})
+   utils.Response(c, http.StatusInternalServerError,utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32603, Message: "Invalid Server Error", Data: err.Error()}})
 	fmt.Println(err)
 	return
  }
