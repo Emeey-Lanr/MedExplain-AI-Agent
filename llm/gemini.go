@@ -33,7 +33,7 @@ func GeminiAIRequest(contentData []models.ContentData)( models.GeminiReponseObje
 
    reqBody, _:= json.Marshal(systemInstructionAndContentData) 
 	
-       fmt.Println(string(reqBody))
+       
 
   req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(reqBody))
   if err != nil{
