@@ -61,12 +61,12 @@ if reqJsonRPC.Params.ContextId == "" {
  config.History.AddHistory(reqJsonRPC.Params.ContextId, "agent", geminiResponse.Candidates[0].Contents.Parts[0].Text )
 
  messageParts :=  []map[string]interface{}{{"kind":"text", "text":geminiResponse.Candidates[0].Contents.Parts[0].Text}}
-
+taskId := helpers.GenerateContextId("tsk-")
  response := map[string]interface{}{
 	"jsonrpc":reqJsonRPC.Jsonrpc,
 	"id":reqJsonRPC.Id,
 	"result":map[string]interface{}{
-		"id":reqJsonRPC.Params.Message.TaskId,
+		"id":taskId,
 		"contextId":reqJsonRPC.Params.ContextId,
 		"status":map[string]interface{}{
 			"state":"completed",
@@ -76,7 +76,7 @@ if reqJsonRPC.Params.ContextId == "" {
 				"role":"agent",
 				"parts": messageParts,
 				"kind":"message",
-				"taskId":reqJsonRPC.Params.Message.TaskId,
+				"taskId":taskId,
 			},
 		},
 		"kind":"task",
