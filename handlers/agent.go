@@ -6,7 +6,6 @@ import (
 	"ai-agent/llm"
 	"ai-agent/models"
 	"ai-agent/utils"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -31,9 +30,7 @@ func Inquire(c *gin.Context) {
  }
 
 
-  req, _ := json.Marshal(reqJsonRPC)
   
-  fmt.Println(string(req))
 
   if reqJsonRPC.Jsonrpc != "2.0" || reqJsonRPC.Jsonrpc == ""{
 	utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:"", Error:utils.ErrorData{Code:-32600, Message: "Invalid Request", Data: "Unsupported JSON-RPC Version"}})
