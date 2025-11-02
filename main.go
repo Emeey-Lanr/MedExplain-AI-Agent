@@ -18,7 +18,7 @@ func main ()  {
     config.Init()
 
 	if err := godotenv.Load(); err != nil{
-		log.Fatal("Error loading.env:", err) // change to println in production for your app not crash
+		log.Println("Error loading.env:", err) // change to println in production for your app not crash
 	}
 
 	agentRoute := r.Group("/a2a")
