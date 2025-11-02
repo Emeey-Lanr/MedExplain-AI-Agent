@@ -25,7 +25,7 @@ func Inquire(c *gin.Context) {
    
 
  if err := c.ShouldBindJSON(&reqJsonRPC); err != nil{
-   utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:"", Error:utils.ErrorData{Code:-32700, Message: "Parse Error", Data: err.Error()}})
+   utils.Response(c, http.StatusBadRequest, utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32700, Message: "Parse Error", Data: err.Error()}})
 	return
  }
 
@@ -33,14 +33,9 @@ func Inquire(c *gin.Context) {
   
 
   if reqJsonRPC.Jsonrpc != "2.0" || reqJsonRPC.Jsonrpc == ""{
-	utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:"", Error:utils.ErrorData{Code:-32600, Message: "Invalid Request", Data: "Unsupported JSON-RPC Version"}})
+	utils.Response(c, http.StatusBadRequest, utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32600, Message: "Invalid Request", Data: "Unsupported JSON-RPC Version"}})
 	return
  
-  }
-
-  if reqJsonRPC.Method != "method/send" {
-  utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:"", Error:utils.ErrorData{Code:-32601, Message: "Method not found", Data: "The method int the request doesn't exist or is not available"}})
-	return
   }
 
 
@@ -57,6 +52,7 @@ if reqJsonRPC.Params.ContextId == "" {
 //  Gemini Response
  geminiResponse, err :=  llm.GeminiAIRequest(config.History.GetHistory(reqJsonRPC.Params.ContextId))
  if err != nil{
+   utils.Response(c, http.StatusInternalServerError,utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32600, Message: "Invalid Server Error", Data: err.Error()}})
 	fmt.Println(err)
 	return
  }
@@ -74,7 +70,7 @@ if reqJsonRPC.Params.ContextId == "" {
 		"contextId":reqJsonRPC.Params.ContextId,
 		"status":map[string]interface{}{
 			"state":"input-required",
-			"timestamp":time.Now().UTC().Format(time.RFC3339),
+			"timestamp":time.Now().UTC().Format(time.RFC3339), 
 			"message":map[string]interface{}{
                 "messageId":helpers.GenerateContextId("msg-"),
 				"role":"agent",

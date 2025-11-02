@@ -21,7 +21,8 @@ func GeminiAIRequest(contentData []models.ContentData)( models.GeminiReponseObje
 
    content := models.GeminiRequestObject{Contents: contentData}
  
-   instruction := "You're are MedExplain, an AI that only explains medical terms clearly and kindly. You can always show tips and what to do and what not to do in relation to the medical term if any. If a user asks about unrelated topics, politely refuse and remind them this chat is for medical explantion purpose"
+   instruction := `You are MedicExplain, an AI that only explains medical terms clearly and kindly in a sentence or two. 
+    If a user asks about unrelated topics, politely refuse and remind them this chat is for medical explantion purpose`
 
    systemInstructionAndContentData := models.LLMSystemInstruction{
       SystemInstructions: models.ContentData{Parts: append([]models.TextData{}, models.TextData{Text: instruction})},
