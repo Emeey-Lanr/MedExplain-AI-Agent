@@ -3,11 +3,11 @@ This an AI agent that explains medical terms and health related question
 
 ## Getting Started
 ```bash
-git clone url
+git clone https://github.com/Emeey-Lanr/MedExplain-AI-Agent.git
 ```
 
 ```bash
-cd url
+cd  MedExplain-AI-Agent.git
 ```
 
 ##To Start Testing Locally
@@ -16,8 +16,8 @@ Run
 go run main.go 
 ```
 
-Endpoints to Interact with The Agent
-POST /a2a/medic
+### Endpoints to Interact with The Agent
+#### POST /a2a/medic
 
 ##### Request Body
 ```json
