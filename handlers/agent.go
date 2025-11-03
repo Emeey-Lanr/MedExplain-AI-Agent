@@ -52,7 +52,7 @@ if reqJsonRPC.Params.ContextId == "" {
   config.History.AddHistory(reqJsonRPC.Params.ContextId, "user", reqJsonRPC.Params.Message.Parts[0].Text)
 
 //  Gemini Response
- geminiResponse, err :=  llm.GeminiAIRequest(config.History.GetHistory(reqJsonRPC.Params.ContextId))
+ geminiResponse, err :=  llm.GeminiAIRequest([]models.ContentData{{Parts: []models.TextData{{Text: reqJsonRPC.Params.Message.Parts[0].Text}}}})
  if err != nil{
    utils.Response(c, http.StatusInternalServerError,utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32603, Message: "Invalid Server Error", Data: err.Error()}})
 	fmt.Println(err)
@@ -81,7 +81,14 @@ taskId := helpers.GenerateContextId("task-")
 				"taskId": taskId,
 			},
 		},
-		"artifacts": []map[string]interface{}{}, 
+		"artifacts": []map[string]interface{}{{
+			"artifactId":helpers.GenerateContextId("art-"),
+			"name":"Gemini AI Respone",
+			"parts":[]map[string]interface{}{
+				{"kind":"text", "text":messageParts},
+			},
+		},
+		}, 
     "history":   []map[string]interface{}{},
 		"kind":"task",
 	},
@@ -95,7 +102,7 @@ taskId := helpers.GenerateContextId("task-")
     pushUrl := reqJsonRPC.Params.Configuration.PushNotificationConfig.Url
     token := reqJsonRPC.Params.Configuration.PushNotificationConfig.Token
 		
-	fmt.Println("PushNotificationConfig:", reqJsonRPC.Params.Configuration.PushNotificationConfig)
+	fmt.Println("PushNotificationConfig:", reqJsonRPC.Params.Configuration.PushNotificationConfig.Token)
 
     payload, _ := json.Marshal(response)
     req, _ := http.NewRequest("POST", pushUrl, bytes.NewBuffer(payload))

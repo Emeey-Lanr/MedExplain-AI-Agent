@@ -12,12 +12,7 @@ import (
 
 func GeminiAIRequest(contentData []models.ContentData)( models.GeminiReponseObject, error){
 	
-   for _, value := range contentData{
-      if value.Role == "agent" {
-         value.Role = "model"
-      }
-
-   }
+  
 
    content := models.GeminiRequestObject{Contents: contentData}
  
