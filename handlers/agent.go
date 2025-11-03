@@ -28,7 +28,7 @@ func Inquire(c *gin.Context) {
    
 
  if err := c.ShouldBindJSON(&reqJsonRPC); err != nil{
-   utils.Response(c, http.StatusBadRequest, utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32700, Message: "Parse Error", Data: err.Error()}})
+   utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32700, Message: "Parse Error", Data: err.Error()}})
 	return
  }
 
@@ -36,7 +36,7 @@ func Inquire(c *gin.Context) {
   
 
   if reqJsonRPC.Jsonrpc != "2.0" || reqJsonRPC.Jsonrpc == ""{
-	utils.Response(c, http.StatusBadRequest, utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32600, Message: "Invalid Request", Data: "Unsupported JSON-RPC Version"}})
+	utils.Response(c, 200, utils.ErrorResponse{Jsonrpc: "2.0", Id:reqJsonRPC.Id, Error:utils.ErrorData{Code:-32600, Message: "Invalid Request", Data: "Unsupported JSON-RPC Version"}})
 	return
  
   }

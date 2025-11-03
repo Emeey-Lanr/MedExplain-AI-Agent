@@ -23,15 +23,15 @@ go run main.go
 ```json
 {
 "jsonrpc":"2.0",
-"id":"id-uuid",
+"id":"test-001",
 "method":"message/send",
 "params":{
     "message":{
      "kind":"message",
      "role":"user",
     "parts":[{"kind":"text","text":"Explain arthritis."}],
-    "taskId":"",
-    "messageId":"537a29257575494a929bc773bfb59e74"},
+    "taskId":"task-001",
+    "messageId":"msg-001"},
 
     "configuration":{
         "blocking":true
@@ -43,7 +43,7 @@ go run main.go
 ##### Response Body
 ```json
 {
-  "id": "id-uuid",
+  "id": "test-001",
   "jsonrpc": "2.0",
   "result": {
      "contextId": "ctx-uuid",
@@ -55,7 +55,7 @@ go run main.go
       "timestamp": "2025-11-03T10:32:14Z",
       "message": {
         "kind": "message",
-        "messageId": "msg-3bcefa60-ad62-4257-a152-b11d17976efb",
+        "messageId": "msg-uuid",
         "parts": [
           {
             "kind": "text",
@@ -63,11 +63,11 @@ go run main.go
           }
         ],
         "role": "agent",
-        "taskId": "task-uuid"
+        "taskId": "task-001"
       },
     "artifacts": [
       {
-        "artifactId": "artifact-id",
+        "artifactId": "artifact-uuid",
         "name": "Gemini-AI-Response",
         "parts": [
           {
