@@ -91,7 +91,7 @@ taskId := helpers.GenerateContextId("task-")
  utils.Response(c, http.StatusOK, response)
 
 
-	go func() { // use goroutine so it doesn't block
+	go func() { // using goroutine so it doesn't block
     pushUrl := reqJsonRPC.Params.Configuration.PushNotificationConfig.Url
     token := reqJsonRPC.Params.Configuration.PushNotificationConfig.Token
 
@@ -103,7 +103,7 @@ taskId := helpers.GenerateContextId("task-")
     client := &http.Client{Timeout: 5 * time.Second}
     resp, err := client.Do(req)
     if err != nil {
-        fmt.Println("❌ Error sending to Telex:", err)
+        fmt.Println("Error sending to Telex:", err)
         return
     }
     defer resp.Body.Close()
