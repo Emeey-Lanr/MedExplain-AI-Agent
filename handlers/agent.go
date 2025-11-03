@@ -84,9 +84,9 @@ taskId := helpers.GenerateContextId("task-")
 		},
 		"artifacts": []map[string]interface{}{{
 			"artifactId":helpers.GenerateContextId("art-"),
-			"name":"Gemini AI Respone",
+			"name":"Gemini-AI-Response",
 			"parts":[]map[string]interface{}{
-				{"kind":"text", "text":messageParts},
+				{"kind":"text", "text":geminiResponse.Candidates[0].Contents.Parts[0].Text},
 			},
 		},
 		}, 
@@ -104,8 +104,20 @@ taskId := helpers.GenerateContextId("task-")
     token := reqJsonRPC.Params.Configuration.PushNotificationConfig.Token
 		
 	fmt.Println("PushNotificationConfig:", reqJsonRPC.Params.Configuration.PushNotificationConfig.Token)
+     
 
-    payload, _ := json.Marshal(response)
+	pushPayload := map[string]interface{}{
+          "event":"agent.message",
+		  "data":map[string]interface{}{
+			"contextId":"",
+			"message":map[string]interface{}{
+				"role":"",
+				"parts":[]map[string]interface{}{{"kind":"text", "text":geminiResponse.Candidates[0].Contents.Parts[0].Text},
+			},
+			},
+		  },
+	}
+    payload, _ := json.Marshal(pushPayload)
     req, _ := http.NewRequest("POST", pushUrl, bytes.NewBuffer(payload))
     req.Header.Set("Authorization", "Bearer "+token)
     req.Header.Set("Content-Type", "application/json")
