@@ -109,9 +109,9 @@ taskId := helpers.GenerateContextId("task-")
 	pushPayload := map[string]interface{}{
           "event":"agent.message",
 		  "data":map[string]interface{}{
-			"contextId":"",
+			"contextId":reqJsonRPC.Params.ContextId,
 			"message":map[string]interface{}{
-				"role":"",
+				"role":"agent",
 				"parts":[]map[string]interface{}{{"kind":"text", "text":geminiResponse.Candidates[0].Contents.Parts[0].Text},
 			},
 			},
