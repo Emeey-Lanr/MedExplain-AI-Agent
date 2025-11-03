@@ -69,7 +69,7 @@ taskId := helpers.GenerateContextId("task-")
 		"id":taskId,
 		"contextId":reqJsonRPC.Params.ContextId,
 		"status":map[string]interface{}{
-			"state":"input-required",
+			"state":"completed",
 			"timestamp":time.Now().UTC().Format(time.RFC3339), 
 			"message":map[string]interface{}{
                 "messageId":helpers.GenerateContextId("msg-"),
