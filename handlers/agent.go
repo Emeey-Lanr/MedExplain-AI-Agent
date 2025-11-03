@@ -76,7 +76,7 @@ taskId := helpers.GenerateContextId("task-")
 				"role":"agent",
 				"parts": messageParts,
 				"kind":"message",
-
+				"taskId": taskId,
 			},
 		},
 		"artifacts": []map[string]interface{}{}, 
