@@ -16,22 +16,22 @@ type MessageData struct {
 }
 
 // Authentication config for push notifications
-type Authentication struct {
+type AuthenticationD struct {
 	Schemes []string `json:"schemes"`
 }
 
 // Push notification config from Telex
-type PushNotificationConfig struct {
+type PushNotificationConfigD struct {
 	Url            string         `json:"url"`
 	Token          string         `json:"token"`
-	Authentication Authentication `json:"authentication"`
+	Authentication AuthenticationD `json:"authentication"`
 }
 
 // Configuration block that includes blocking and webhook info
 type Config struct {
 	AcceptedOutputModes   []string              `json:"acceptedOutputModes,omitempty"`
 	HistoryLength         int                   `json:"historyLength,omitempty"`
-	PushNotificationConfig PushNotificationConfig `json:"pushNotificationConfig"`
+	PushNotificationConfig PushNotificationConfigD `json:"pushNotificationConfig"`
 	Blocking              bool                  `json:"blocking"`
 }
 
