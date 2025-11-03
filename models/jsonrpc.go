@@ -1,39 +1,53 @@
 package models
 
-
-
+// Each part of the message (text, data, etc.)
 type PartData struct {
 	Kind string `json:"kind"`
 	Text string `json:"text"`
 }
 
-
-
+// The main message object sent between user and agent
 type MessageData struct {
-  Kind string `json:"kind,omitempty"`
-  Role string `json:"Role"`
-  Parts []PartData `json:"parts"`
-  MessageId string `json:"messageId"`
-  TaskId  string `json:"taskId"`
-
+	Kind      string     `json:"kind,omitempty"`
+	Role      string     `json:"role"` // fixed lowercase JSON key
+	Parts     []PartData `json:"parts"`
+	MessageId string     `json:"messageId"`
+	TaskId    string     `json:"taskId"`
 }
 
+// Authentication config for push notifications
+type Authentication struct {
+	Schemes []string `json:"schemes"`
+}
 
+// Push notification config from Telex
+type PushNotificationConfig struct {
+	Url            string         `json:"url"`
+	Token          string         `json:"token"`
+	Authentication Authentication `json:"authentication"`
+}
+
+// Configuration block that includes blocking and webhook info
 type Config struct {
-	Blocking bool `json:"blocking"`
+	AcceptedOutputModes   []string              `json:"acceptedOutputModes,omitempty"`
+	HistoryLength         int                   `json:"historyLength,omitempty"`
+	PushNotificationConfig PushNotificationConfig `json:"pushNotificationConfig"`
+	Blocking              bool                  `json:"blocking"`
 }
 
-type MessageObj struct{
-   ContextId string `json:"contextId"`
-	Message MessageData `json:"message"`
-	  Configuration  Config `json:"configuration"`
+// The params object in the JSON-RPC request
+type MessageObj struct {
+	ContextId     string  `json:"contextId"`
+	Message       MessageData `json:"message"`
+	Configuration Config  `json:"configuration"`
 }
 
+// The main JSON-RPC request wrapper
 type JSONRPC_REQUEST struct {
-  Jsonrpc string `json:"jsonrpc"`
-  Id string `json:"id"`
-  Method string `json:"method"`
-  Params MessageObj `json:"params"`
+	Jsonrpc string     `json:"jsonrpc"`
+	Id      string     `json:"id"`
+	Method  string     `json:"method"`
+	Params  MessageObj `json:"params"`
 }
 
 
