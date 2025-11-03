@@ -94,6 +94,8 @@ taskId := helpers.GenerateContextId("task-")
 	go func() { // using goroutine so it doesn't block
     pushUrl := reqJsonRPC.Params.Configuration.PushNotificationConfig.Url
     token := reqJsonRPC.Params.Configuration.PushNotificationConfig.Token
+		
+	fmt.Println("PushNotificationConfig:", reqJsonRPC.Params.Configuration.PushNotificationConfig)
 
     payload, _ := json.Marshal(response)
     req, _ := http.NewRequest("POST", pushUrl, bytes.NewBuffer(payload))
