@@ -8,6 +8,7 @@ import (
 	"ai-agent/utils"
 	"fmt"
 	"net/http"
+	"encoding/json"
 	"time"
     "github.com/gin-gonic/gin"
 	
@@ -87,6 +88,26 @@ taskId := helpers.GenerateContextId("task-")
  
 
  utils.Response(c, http.StatusOK, response)
+
+
+	go func() { // use goroutine so it doesn't block
+    pushUrl := reqJsonRPC.Params.Configuration.PushNotificationConfig.Url
+    token := reqJsonRPC.Params.Configuration.PushNotificationConfig.Token
+
+    payload, _ := json.Marshal(response)
+    req, _ := http.NewRequest("POST", pushUrl, bytes.NewBuffer(payload))
+    req.Header.Set("Authorization", "Bearer "+token)
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{Timeout: 5 * time.Second}
+    resp, err := client.Do(req)
+    if err != nil {
+        fmt.Println("❌ Error sending to Telex:", err)
+        return
+    }
+    defer resp.Body.Close()
+    fmt.Println("Sent to Telex:", resp.Status)
+}()
  
 
 }
