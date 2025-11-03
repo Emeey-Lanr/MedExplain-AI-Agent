@@ -61,7 +61,7 @@ if reqJsonRPC.Params.ContextId == "" {
  config.History.AddHistory(reqJsonRPC.Params.ContextId, "agent", geminiResponse.Candidates[0].Contents.Parts[0].Text )
 
  messageParts :=  []map[string]interface{}{{"kind":"text", "text":geminiResponse.Candidates[0].Contents.Parts[0].Text}}
-taskId := helpers.GenerateContextId("tsk-")
+taskId := helpers.GenerateContextId("task-")
  response := map[string]interface{}{
 	"jsonrpc":reqJsonRPC.Jsonrpc,
 	"id":reqJsonRPC.Id,
@@ -76,9 +76,11 @@ taskId := helpers.GenerateContextId("tsk-")
 				"role":"agent",
 				"parts": messageParts,
 				"kind":"message",
-				"taskId":taskId,
+
 			},
 		},
+		"artifacts": []map[string]interface{}{}, 
+    "history":   []map[string]interface{}{},
 		"kind":"task",
 	},
  }
