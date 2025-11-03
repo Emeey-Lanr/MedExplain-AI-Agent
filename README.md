@@ -7,7 +7,7 @@ git clone https://github.com/Emeey-Lanr/MedExplain-AI-Agent.git
 ```
 
 ```bash
-cd  MedExplain-AI-Agent.git
+cd  MedExplain-AI-Agent
 ```
 
 ##To Start Testing Locally
