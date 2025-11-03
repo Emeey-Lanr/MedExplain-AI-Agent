@@ -22,7 +22,7 @@ import (
 
 func Inquire(c *gin.Context) {
 	
-   fmt.Println(c.Request.Method, "Using Route")
+
    var reqJsonRPC models.JSONRPC_REQUEST
   
    
