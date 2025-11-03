@@ -122,7 +122,7 @@ taskId := helpers.GenerateContextId("task-")
     req.Header.Set("Authorization", "Bearer "+token)
     req.Header.Set("Content-Type", "application/json")
 
-    client := &http.Client{Timeout: 5 * time.Second}
+    client := &http.Client{Timeout: 10 * time.Second}
     resp, err := client.Do(req)
     if err != nil {
         fmt.Println("Error sending to Telex:", err)
